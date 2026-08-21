@@ -1,66 +1,66 @@
-## Foundry
+# Counter
 
-**Foundry is a blazing fast, portable and modular toolkit for Ethereum application development written in Rust.**
+A minimal Solidity smart-contract project built with [Foundry](https://book.getfoundry.sh/). The `Counter` contract stores one public unsigned integer and exposes functions to set or increment it.
 
-Foundry consists of:
+## Project information
 
-- **Forge**: Ethereum testing framework (like Truffle, Hardhat and DappTools).
-- **Cast**: Swiss army knife for interacting with EVM smart contracts, sending transactions and getting chain data.
-- **Anvil**: Local Ethereum node, akin to Ganache, Hardhat Network.
-- **Chisel**: Fast, utilitarian, and verbose solidity REPL.
+| Item | Details |
+| --- | --- |
+| Created | 21 August 2026 |
+| Solidity version | `^0.8.13` |
+| Framework | Foundry (Forge) |
+| Main contract | `src/Counter.sol` |
+| Test suite | `test/Counter.t.sol` |
+| Deployment script | `script/Counter.s.sol` |
+| Test library | `forge-std` in `lib/forge-std` |
 
-## Documentation
+## Contract API
 
-https://book.getfoundry.sh/
+`Counter` has one public state variable, `number`, which Solidity exposes through an automatically generated getter: `number()`.
 
-## Usage
+| Function | Description |
+| --- | --- |
+| `setNumber(uint256 newNumber)` | Replaces the current value with `newNumber`. |
+| `increment()` | Increases the current value by one. |
 
-### Build
+## Important notes
+
+- This is an educational/example contract. It has no ownership or access control, so any account can call `setNumber` or `increment` after deployment.
+- Solidity 0.8.x reverts on arithmetic overflow, so `increment()` reverts if `number` is already `type(uint256).max`.
+- The deployment script deploys a fresh `Counter` using the broadcasting account configured by Foundry. Keep private keys out of source control.
+
+## Getting started
+
+Install [Foundry](https://book.getfoundry.sh/getting-started/installation), then run the following from this directory:
 
 ```shell
-$ forge build
+forge build
+forge test
 ```
 
-### Test
+Run the formatter:
 
 ```shell
-$ forge test
+forge fmt
 ```
 
-### Format
+## Deployment
 
-```shell
-$ forge fmt
+Deploy with an RPC endpoint and a private key supplied through your shell environment:
+
+```powershell
+$env:RPC_URL = "https://your-rpc-endpoint"
+$env:PRIVATE_KEY = "your-private-key"
+forge script script/Counter.s.sol:CounterScript --rpc-url $env:RPC_URL --private-key $env:PRIVATE_KEY --broadcast
 ```
 
-### Gas Snapshots
+Use a test network first and never commit credentials.
 
-```shell
-$ forge snapshot
-```
+## Layout
 
-### Anvil
-
-```shell
-$ anvil
-```
-
-### Deploy
-
-```shell
-$ forge script script/Counter.s.sol:CounterScript --rpc-url <your_rpc_url> --private-key <your_private_key>
-```
-
-### Cast
-
-```shell
-$ cast <subcommand>
-```
-
-### Help
-
-```shell
-$ forge --help
-$ anvil --help
-$ cast --help
+```text
+src/        Solidity source contracts
+test/       Forge unit and fuzz tests
+script/     Forge deployment scripts
+lib/        External dependencies (including forge-std)
 ```
